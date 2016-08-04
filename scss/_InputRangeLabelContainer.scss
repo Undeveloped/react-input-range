@@ -1,8 +1,8 @@
 .InputRange-labelContainer {
-  left: -50%;
+  left: 0;
   position: relative;
 
   .InputRange-label--max & {
-    left: 50%;
+    // left: $InputRange-slider-border-size;
   }
 }

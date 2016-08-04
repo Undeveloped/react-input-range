@@ -5,8 +5,14 @@
 @import "InputRangeTrack";
 
 .InputRange {
+  background: $InputRange-track-background;
+  border-radius: $InputRange-track-height;
   cursor: pointer;
   height: $InputRange-slider-height;
   position: relative;
   width: 100%;
+
+  &.is-disabled {
+    background: $InputRange-track--is-disabled-background;
+  }
 }

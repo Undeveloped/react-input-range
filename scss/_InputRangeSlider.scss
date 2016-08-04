@@ -7,7 +7,7 @@
   cursor: pointer;
   display: block;
   height: $InputRange-slider-height;
-  margin-left: $InputRange-slider-width / -2;
+  margin-left: ($InputRange-slider-width / 2 + $InputRange-slider-border-size) * -1;
   margin-top: ($InputRange-slider-border-size * 2 + $InputRange-slider-height + $InputRange-track-height) / -2;
   outline: none;
   position: absolute;
