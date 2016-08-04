@@ -5,6 +5,30 @@
 import { clamp, isEmpty, isNumber, objectOf } from './util';
 
 /**
+ * Convert percentage into logarithmic value
+ * @method logValueFromPercentage
+ * @param {InputRange} inputRange
+ * @param {Point} position
+ * @return {number} Logarithmic value
+ */
+function logValueFromPercentage(inputRange, perc) {
+  // perc will be between 0 and 100
+  const minp = 0;
+  const maxp = 100;
+
+  if (!perc) { return 0; }
+
+  // The result should be between min and max
+  const minv = Math.log(inputRange.props.minValue || 1);
+  const maxv = Math.log(inputRange.props.maxValue);
+
+  // calculate adjustment factor
+  const scale = (maxv - minv) / (maxp - minp);
+
+  return Math.exp(minv + scale * (perc - minp));
+}
+
+/**
  * Convert position into percentage value
  * @static
  * @param {InputRange} inputRange
@@ -28,6 +52,7 @@ function percentageFromPosition(inputRange, position) {
 function valueFromPosition(inputRange, position) {
   const sizePerc = percentageFromPosition(inputRange, position);
   const valueDiff = inputRange.props.maxValue - inputRange.props.minValue;
+  if (inputRange.props.logScale) { return logValueFromPercentage(inputRange, sizePerc * 100); }
   const value = inputRange.props.minValue + valueDiff * sizePerc;
 
   return value;
@@ -60,6 +85,30 @@ function valuesFromProps(inputRange, { props } = inputRange) {
 }
 
 /**
+ * Convert logarithmic value into percentage value
+ * @method percentageFromLogValue
+ * @param {InputRange} inputRange
+ * @param {number} value
+ * @return {number} Percentage value
+ */
+function percentageFromLogValue(inputRange, value) {
+  // The result should be between 0 and 100
+  const minp = 0;
+  const maxp = 1;
+
+  if (!value) { return 0; }
+
+  // value will be between min and max
+  const minv = Math.log(inputRange.props.minValue || 1);
+  const maxv = Math.log(inputRange.props.maxValue);
+
+  // calculate adjustment factor
+  const scale = (maxv - minv) / (maxp - minp);
+
+  return (Math.log(value) - minv) / scale + minp;
+}
+
+/**
  * Convert value into percentage value
  * @static
  * @param {InputRange} inputRange
@@ -70,6 +119,7 @@ function percentageFromValue(inputRange, value) {
   const validValue = clamp(value, inputRange.props.minValue, inputRange.props.maxValue);
   const valueDiff = inputRange.props.maxValue - inputRange.props.minValue;
   const valuePerc = (validValue - inputRange.props.minValue) / valueDiff;
+  if (inputRange.props.logScale) { return percentageFromLogValue(inputRange, value); }
 
   return valuePerc || 0;
 }
