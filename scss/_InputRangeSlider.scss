@@ -3,6 +3,7 @@
   background: $InputRange-slider-background;
   border: $InputRange-slider-border;
   border-radius: 100%;
+  box-sizing: content-box;
   cursor: pointer;
   display: block;
   height: $InputRange-slider-height;
